@@ -1,0 +1,16 @@
+{{recipe.title}}
+{{'=' * (recipe.title|length)}}
+
+Ingredients:
+------------
+
+{%- for i in recipe.ingredients %}
+    * [{{ i.quantity }}] **{{ i.name }}** {{ (' -- ' + i.details) if i.details else '' }}
+{%- endfor %}
+
+Steps:
+------
+
+{%- for s in recipe.steps %}
+    #. {{ s.action }} {{ s.details if s.details else '' }}
+{%- endfor %}
