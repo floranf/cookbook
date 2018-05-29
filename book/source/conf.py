@@ -122,7 +122,7 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'alabaster' #'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -130,7 +130,7 @@ html_theme = 'alabaster'
 #
 html_theme_options = {
     # Disable showing the sidebar. Defaults to 'false'
-    'nosidebar': True,    
+    'nosidebar': False,
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

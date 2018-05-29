@@ -15,6 +15,6 @@ Ingredients:
 
 Steps:
 ------
-    #. Tremper les pois chiches. 
-    #. Cuire les pois chiches. 
-    #. Mélanger au mélangeur à hautevitesse ou au robot. 
+    #. **(8 H)** Tremper les pois chiches. 
+    #. **(1 H)** Cuire les pois chiches. 
+    #.  Mélanger au mélangeur à hautevitesse ou au robot. 

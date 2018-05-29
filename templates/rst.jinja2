@@ -12,5 +12,18 @@ Steps:
 ------
 
 {%- for s in recipe.steps %}
-    #. {{ s.action }} {{ s.details if s.details else '' }}
+    #. {{ '**(' + s.quantities + ')**' if s.quantities else '' }} {{ s.action }} {{ s.details if s.details else '' }}
 {%- endfor %}
+{#
+{%- if recipe.sources %}
+
+
+
+Sources:
+--------
+
+{%- for s in recipe.sources %}
+    #. {{ s }}
+{%- endfor %}
+{%- endif %}
+#}

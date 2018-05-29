@@ -15,8 +15,8 @@ Ingredients:
 
 Steps:
 ------
-    #. Faire pleure les tomates jusqu'a ce quelle se défasse.
-    #. Écraser les tomates au chinois pour enlever la pelure et les graines. 
-    #. Cuire les légumes dans l'huile jusqu'à ce que les oignons soient dorés. 
-    #. Ajouter les tomates en purée le sel et les herbes. 
-    #. Mijoter avec la carote entière jusqu'à la consistance désiré. 
+    #. **(20 min)** Faire pleure les tomates jusqu'a ce quelle se défasse.
+    #.  Écraser les tomates au chinois pour enlever la pelure et les graines. 
+    #.  Cuire les légumes dans l'huile jusqu'à ce que les oignons soient dorés. 
+    #.  Ajouter les tomates en purée le sel et les herbes. 
+    #.  Mijoter avec la carote entière jusqu'à la consistance désiré. 

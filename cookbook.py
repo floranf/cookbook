@@ -77,7 +77,7 @@ class Step:
 		self.quantities = []
 		quantities = m.group('quantities')
 		if quantities:
-			self.quantities = quantities.split(',')
+			self.quantities = quantities #.split(',')
 
 		self.action = m.group('action')
 		if not self.action:
@@ -102,7 +102,14 @@ class Recipe:
 	should have: dates, images, intro
 	''' 
 	def __init__(self, data):
-		self.source = None
+		self.sources = []
+		self.title = ''
+		self.ingredients = []
+		self.steps = []
+		self.publish = True
+		
+		if 'publish' in data:
+			self.publish = data['publish']
 
 		if 'title' in data and data['title']:
 			self.title = data['title']
@@ -117,6 +124,10 @@ class Recipe:
 		if not self.steps:
 			raise RecipeException('a recipe must have one or more steps')
 
+		if 'sources' in data:
+			self.sources = data['sources']
+
+
 
 def process_file(file, output_dir=None):
 	#print(f'--> {file}')
@@ -128,6 +139,9 @@ def process_file(file, output_dir=None):
 		with open(file,'r') as f:
 			recipe = Recipe(yaml.load(f))
 			
+			if not recipe.publish:
+				return
+				
 			if output_dir:
 				#print(f'output file --> {output_file}')
 				output_file = os.path.join(output_dir, f'{name}.rst')

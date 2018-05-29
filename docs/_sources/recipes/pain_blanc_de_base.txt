@@ -12,4 +12,4 @@ Ingredients:
 
 Steps:
 ------
-    #. Utiliser la machine à pain 
+    #.  Utiliser la machine à pain 
