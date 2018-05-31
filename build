@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3.6 cookbook.py recipes -o book/source
+python3.6 cookbook.py recipes wip -o book/source
 
 make -C book clean
 

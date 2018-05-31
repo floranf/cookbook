@@ -4,4 +4,6 @@ __pycache__/
 *$py.class
 book/build
 book/source/recipes/*
-wip
+book/source/wip/*
+docs/robots.txt
+

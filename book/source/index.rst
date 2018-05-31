@@ -14,4 +14,13 @@ Cookbook
    ingredients
    temperatures
 
+Incubator
+=========
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   wip/*
+
 
