@@ -2,8 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
 book/build
-book/source/recipes/*
-book/source/wip/*
+
+book/source/recipes
+book/source/groups
+
 docs/robots.txt
 

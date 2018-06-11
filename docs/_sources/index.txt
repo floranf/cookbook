@@ -3,24 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Cookbook
-========
-
-.. toctree::
-   :maxdepth: 1
-   :glob:
-
-   recipes/*
-   ingredients
-   temperatures
-
-Incubator
+By Groups
 =========
 
 .. toctree::
    :maxdepth: 1
    :glob:
 
-   wip/*
+   /groups/*
 
+From A to Z
+===========
 
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   /recipes/*

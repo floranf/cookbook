@@ -69,7 +69,7 @@ release = '1.0'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'fr'
+language = 'en'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -130,7 +130,6 @@ html_theme = 'alabaster' #'alabaster'
 #
 html_theme_options = {
     # Disable showing the sidebar. Defaults to 'false'
-    'nosidebar': False,
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -243,6 +242,7 @@ html_show_sourcelink = False
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Cookbookdoc'
 
+html_add_permalinks = False
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {

@@ -1,0 +1,6 @@
+Soups
+=====
+    * :ref:`828cf9ec262144bea317f44b201a5f29`
+    * :ref:`50e36b4d31be4ec39e23cc480062e922`
+    * :ref:`59a488f76e784db3b35296ea11b2c904`
+    * :ref:`2efce66561134db89465ca0bd5d83057`

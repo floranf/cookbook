@@ -1,0 +1,6 @@
+{{group['title']}}
+{{'=' * (group['title']|length)}}
+
+{%- for r in group['recipes'] %}
+    * :ref:`{{ r.id }}`
+{%- endfor %}

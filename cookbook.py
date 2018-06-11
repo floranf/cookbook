@@ -7,8 +7,12 @@ import click
 import sys
 import re
 import os
+import uuid
 import jinja2
+from pathlib import Path
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+import config
 
 class RecipeException(Exception):
 	def __init__(self, message):
@@ -102,6 +106,7 @@ class Recipe:
 	should have: dates, images, intro
 	''' 
 	def __init__(self, data):
+		self.id = uuid.uuid4().hex
 		self.sources = []
 		self.title = ''
 		self.ingredients = []
@@ -127,6 +132,14 @@ class Recipe:
 		if 'sources' in data:
 			self.sources = data['sources']
 
+		if 'groups' in data and data['groups']:
+			for group in data['groups']:
+				if group in config.groups.keys():
+					config.groups[group]['recipes'].append(self)
+				else:
+					raise RecipeException(f'the group "${group}" does not exist')
+		
+		config.recipes.append(self)
 
 
 def process_file(file, output_dir=None):
@@ -153,7 +166,8 @@ def process_file(file, output_dir=None):
 					recipe_to_rst(recipe, out_file)
 
 	except RecipeException as e:
-		print(f'err: {file}: {e!s}')
+		print(f'ERROR: {file}: {e!s}')
+		sys.exit(1)
 	except Exception as e:
 		print(f'[!]: {file}: {e!s}')
 		traceback.print_exc()
@@ -186,10 +200,16 @@ def process_dir(root, output_dir):
 jinja_env = Environment(
     loader = FileSystemLoader('./templates')
 )
-rst_template = jinja_env.get_template('rst.jinja2')
+
+recipe_template = jinja_env.get_template('recipe.jinja2')
+group_template = jinja_env.get_template('group.jinja2')
 
 def recipe_to_rst(recipe, out_file):
-	out_file.write(rst_template.render(recipe=recipe))
+	out_file.write(recipe_template.render(recipe=recipe))
+
+def group_to_rst(group, out_file):
+	out_file.write(group_template.render(group=group))
+
 
 @click.command()
 @click.option('--output', '-o',
@@ -197,12 +217,25 @@ def recipe_to_rst(recipe, out_file):
 	help='Set the output directory for the translated files. It activate the translation; if no output set, only validation is done.')
 @click.argument('files', nargs=-1, type=click.Path(exists=True))
 def main(files, output):
+	# process all recipes files
 	for f in files:
 		if os.path.isdir(f):
 			process_dir(f, output)
 		elif os.path.isfile(f):
 			process_file(f, output)
 
+	# generate all groups
+	
+	p = Path(output, 'groups')
+	p.mkdir(parents=True, exist_ok=True)
+	for group in config.groups.values():
+		if not len(group['recipes']):
+			continue
+		p = Path(output, 'groups', group['title'] + '.rst')
+		with p.open(mode='w') as f:
+			group_to_rst(group, f)
+
+		
 
 if __name__ == '__main__':
 	main()

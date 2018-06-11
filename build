@@ -1,6 +1,11 @@
 #!/bin/bash
 
-python3.6 cookbook.py recipes wip -o book/source
+echo "Removing recipes and groups rst files..."
+rm -fr book/source/groups book/source/recipes 
+
+echo "Calling cookbook.py"
+python3.6 cookbook.py recipes -o book/source
+
 
 make -C book clean
 
@@ -11,3 +16,4 @@ rm -fr docs/*
 touch docs/.nojekyll
 
 cp -r book/build/html/* docs/
+
