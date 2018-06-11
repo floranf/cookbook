@@ -1,6 +1,6 @@
 Soups
 =====
-    * :ref:`828cf9ec262144bea317f44b201a5f29`
-    * :ref:`50e36b4d31be4ec39e23cc480062e922`
-    * :ref:`59a488f76e784db3b35296ea11b2c904`
-    * :ref:`2efce66561134db89465ca0bd5d83057`
+    * :ref:`232373513d1348dda18dadc30481a6af`
+    * :ref:`bfb4bbd07233415cbacf6236b53cdccd`
+    * :ref:`f5207a1163614dcaaaf3eaae9ad8920e`
+    * :ref:`83355e5f8d2741e588dcc33a22e8db62`

@@ -1,3 +1,4 @@
 Drinks
 ======
-    * :ref:`f5dfddd003534392b0815d4a02200f92`
+    * :ref:`42c18846931b4a75abc1a7810eda8509`
+    * :ref:`37c24482f84147c18d0e1f5a74dadb60`
