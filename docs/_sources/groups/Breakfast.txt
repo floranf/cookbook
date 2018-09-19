@@ -1,8 +1,8 @@
 Breakfast
 =========
-    * :ref:`036b39588511438c9e77e72686d01899`
-    * :ref:`233d646cfd3a4c549f6d982efa05c47e`
-    * :ref:`fc1b569e464f4e83a5fd5342bcf057ca`
-    * :ref:`a9d509fdcd224d9aabb89836b313066f`
-    * :ref:`e30cabc0ad184aa9842a7ed85b5f4d50`
-    * :ref:`f6fd088f9307446789beb339e2fa5230`
+    * :ref:`9db47cc47f66421caf35719055b46aee`
+    * :ref:`99aca76a69694c32b460cbee8a32cffe`
+    * :ref:`a81347a08fc446609b60476b6ccf122f`
+    * :ref:`d0590bf589344755bc0eef7a29d2efaf`
+    * :ref:`2f6f77eba8ca47d0b83a18ec2ad227a1`
+    * :ref:`6240d649fa28490d8dbedcad54ae9e47`

@@ -1,10 +1,16 @@
-.. Cookbook documentation master file, created by
-   sphinx-quickstart on Sun Apr 29 13:48:57 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-By Groups
-=========
+Origins
+=======
+
+* `Jehane Benoît <https://en.wikipedia.org/wiki/Jehane_Beno%C3%AEt>`_: Encyclopédie de la cuisine de jehane Benoît (ISBN:978-2761306645)
+* `Deborah Madison <https://en.wikipedia.org/wiki/Deborah_Madison>`_: The New Vegetarian Cooking for Everyone (ISBN:978-1607745532)
+* `Jamie Oliver <https://en.wikipedia.org/wiki/Jamie_Oliver>`_: Jamie's Food Revolution (ISBN:978-1401323592)
+* `Sarah Kramer <https://en.wikipedia.org/wiki/Sarah_Kramer>`_ and `Tanya Barnard <https://www.goodreads.com/book/show/48309.How_It_All_Vegan_>`_: How It All Vegan! (ISBN:978-1551520674)
+* `Angela Liddon <https://ohsheglows.com/>`_: The Oh She Glows Cookbook (ISBN:9781583335277) and Oh She Glows Every Day (ISBN:9780143196518)
+* ...
+
+Groups
+======
 
 .. toctree::
    :maxdepth: 1
@@ -12,7 +18,7 @@ By Groups
 
    /groups/*
 
-From A to Z
+A to Z
 ===========
 
 .. toctree::

@@ -1,4 +1,4 @@
-.. _232373513d1348dda18dadc30481a6af:
+.. _e89918e6adca48a79a4b3d633be616e6:
 
 Chaudrée de lentilles vertes
 ============================
@@ -6,6 +6,7 @@ Chaudrée de lentilles vertes
 Ingredients:
 ------------
     * [1-1/2 tasse] **lentilles vertes**  -- lavées
+    * [6 tasse] **eau** 
     * [10 ml] **sel** 
     * [30 ml] **huile d'olive** 
     * [3/4 tasse] **oignon**  -- émincés
@@ -25,4 +26,4 @@ Steps:
     #.  Cuire au poêlon tous les légumes jusqu'à transparence des oignons. 
     #.  Ajouter les légumes au lentilles. 
     #. **(30 minutes)** Cuire à couvert. 
-    #. **(5 minutes avant la fin)** , ajouter les poivrons au reste des ingrédients. 
+    #. **(5 minutes avant la fin)** Ajouter les poivrons au reste des ingrédients. 
