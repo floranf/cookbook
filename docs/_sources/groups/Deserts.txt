@@ -1,6 +1,6 @@
 Deserts
 =======
-    * :ref:`99aca76a69694c32b460cbee8a32cffe`
-    * :ref:`a81347a08fc446609b60476b6ccf122f`
-    * :ref:`3314a30d672540668fbd6167a9b4e721`
-    * :ref:`e7c200de3bda419bbdad22893e4424d5`
+    * :ref:`42572dfbb44d47fcbbbb62427183592c`
+    * :ref:`b1232942cdea4c57973fcff02989706c`
+    * :ref:`4881a8344a6848a6b8775c0fd965333b`
+    * :ref:`8307bcd31fb0481d861289cdd374e17b`

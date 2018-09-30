@@ -40,5 +40,9 @@ groups = {
     'drink' : {
         'title' : 'Drinks',
         'recipes' : []
-    }
+    },
+	'cookies' : {
+		'title' : 'Cookies',
+		'recipes' : []
+	}
 }
