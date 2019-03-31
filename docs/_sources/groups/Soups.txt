@@ -1,7 +1,0 @@
-Soups
-=====
-    * :ref:`7123fdc1f165408183df388de12a8b92`
-    * :ref:`151366fa6b0945909d3a61245b19aee0`
-    * :ref:`97f46e06f6b24701b7d5e651d35075a1`
-    * :ref:`21f0a155cadf4599a8f944bc9430ad03`
-    * :ref:`6c0d4cf3dccd4ae098cfb6c06e5ebdc2`

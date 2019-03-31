@@ -1,8 +1,0 @@
-Breakfast
-=========
-    * :ref:`001ad94e40594224a30e6179c2426361`
-    * :ref:`42572dfbb44d47fcbbbb62427183592c`
-    * :ref:`b1232942cdea4c57973fcff02989706c`
-    * :ref:`402932f29a694eb6967649c221c53f3e`
-    * :ref:`7584fadacfe1478b8dfab467560c2967`
-    * :ref:`a0f81293d33247f9ad43510ca6093843`

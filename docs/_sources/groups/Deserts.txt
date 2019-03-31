@@ -1,6 +1,0 @@
-Deserts
-=======
-    * :ref:`42572dfbb44d47fcbbbb62427183592c`
-    * :ref:`b1232942cdea4c57973fcff02989706c`
-    * :ref:`4881a8344a6848a6b8775c0fd965333b`
-    * :ref:`8307bcd31fb0481d861289cdd374e17b`

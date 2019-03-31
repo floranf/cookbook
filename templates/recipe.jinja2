@@ -1,7 +1,18 @@
+.. raw:: latex
+
+    \clearpage
+
 .. _{{recipe.id}}:
 
-{{recipe.title}}
-{{'=' * (recipe.title|length)}}
+
+:index:`{{recipe.title}}`
+========={{'=' * (recipe.title|length)}}
+
+{% if recipe.img %}
+.. image:: {{recipe.img}}
+   :height: 200px
+   :align: center
+{% endif %}
 
 Ingredients:
 ------------

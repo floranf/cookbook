@@ -1,5 +1,0 @@
-Dips & Sauces
-=============
-    * :ref:`592d1ffb8e7c4c9c9c9ec5deffc44252`
-    * :ref:`5ec594cb851e4522919da79b5000daaf`
-    * :ref:`2c9aafb3e4a542c4b2c61feaff372165`

@@ -1,3 +1,0 @@
-Beads
-=====
-    * :ref:`b51b983259f240689e50dc2c36ceb5aa`
