@@ -4,7 +4,7 @@ echo "Removing recipes and groups rst files..."
 rm -fr book/source/groups book/source/recipes 
 
 echo "Calling cookbook.py"
-python3.6 cookbook.py recipes -o book/source
+python3.7 cookbook.py recipes -o book/source
 
 make -C book clean html
-make -C book clean latexpdf
+#make -C book clean latexpdf

@@ -23,7 +23,7 @@ A to Z
 ===========
 
 .. toctree::
-   :maxdepth: 1
    :glob:
 
-   /recipes/*
+   recipes/**
+

@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.6
+#!/usr/local/bin/python3.7
 # -*- coding: utf-8 -*-
 
 import traceback
@@ -12,16 +12,29 @@ import jinja2
 import shutil
 from pathlib import Path
 
-
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import config
 
-class RecipeException(Exception):
-    def __init__(self, message):
+
+class CookbookException(Exception):
+    def __init__(self, message=""):
         self.message = message
+
+    def __str__(self):
+        return f"{self.message}: {self.__cause__}"
+
+
+class SourceException(CookbookException):
+    def __init__(self, filename, message=""):
+        CookbookException.__init__(self, message)
+        self.filename = filename
         
     def __str__(self):
-        return self.message
+        return f"{self.filename}: {CookbookException.__str__(self)}"
+
+
+class RecipeException(CookbookException):
+    pass
 
 
 class IngredientException(RecipeException):
@@ -145,55 +158,59 @@ class Recipe:
         config.recipes.append(self)
 
 
-def process_file(file, output_dir=None):
-    #print(f'--> {file}')
-    basename = file.name
-    name = file.stem
+def process_file(file, output):
+    """
+    Process a recipe file.
+
+    file : pathlib.Path
+        The path to the recipe file to process.
+    output : pathlib.Path
+        The path to the directory for the rendered file.
+        If we dont have an output, we will only validate each input file.
+    """
     try:
+        name = file.stem
         with file.open() as f:
-            recipe = Recipe(yaml.load(f))
+            recipe = Recipe(yaml.safe_load(f))
             if not recipe.publish:
                 return
             source_imagefile = file.with_suffix('.png')
-            print(f"check for image = {source_imagefile}")
             if source_imagefile.exists():
                 recipe.img = source_imagefile.name
-            if output_dir:
-                output_file = Path(output_dir, name).with_suffix('.rst')
-                print(f'output file --> {output_file}')
-                if not os.path.exists(output_dir):
-                    os.makedirs(output_dir)
+            if output:
+                output_file = Path(output, name).with_suffix('.rst')
+                if not os.path.exists(output):
+                    os.makedirs(output)
                 with output_file.open('w') as out_file:
                     recipe_to_rst(recipe, out_file)
                 if recipe.img:
                     output_imagefile = output_file.with_suffix('.png')
-                    print(f"output image = {output_imagefile}")
                     shutil.copyfile(source_imagefile, output_imagefile)
-
-    except RecipeException as e:
-        print(f'ERROR: {file}: {e!s}')
-        sys.exit(1)
-    except Exception as e:
-        print(f'[!]: {file}: {e!s}')
-        traceback.print_exc()
+    except CookbookException as ex:
+        raise SourceException(str(file)) from ex
+    except Exception as ex:
+        raise SourceException(str(file), "unexpected exception while processing file") from ex
 
 
-def process_dir(root, output_dir):
-    basename = root.name
-    for dirpath, dirnames, filenames in os.walk(root):
-        # if we dont have an output, we only validate each input file
-        if output_dir:
-            output_dir = os.path.join(
-                output_dir.strip(os.pathsep), # this is where we want the output
-                basename, # the name of the source dir given on the command line
-                dirpath.replace(str(root),'').lstrip(os.pathsep) # relative path by removing the root
-            )
+def process_dir(input, output):
+    """
+    Process an recipe directory.
+    
+    Parameters
+    ----------
+    input : pathlib.Path
+        The path to de directory of recipes to process.
+    output : pathlib.Path
+        The path to the directory for the rendered files.
+    """
+    for dirpath, dirnames, filenames in os.walk(input):
+        # build path to reflect the input directory structure
+        if output:
+            out = Path(output, input.name, Path(dirpath).relative_to(input))
         for file in filenames:
             if file.endswith('.yaml'):
-                process_file(
-                    Path(dirpath,file),
-                    output_dir
-                )
+                pass
+                process_file(Path(dirpath, file), out)
 
 
 jinja_env = Environment(
@@ -203,40 +220,61 @@ jinja_env = Environment(
 recipe_template = jinja_env.get_template('recipe.jinja2')
 group_template = jinja_env.get_template('group.jinja2')
 
+
 def recipe_to_rst(recipe, out_file):
     out_file.write(recipe_template.render(recipe=recipe))
+
 
 def group_to_rst(group, out_file):
     out_file.write(group_template.render(group=group))
 
 
 @click.command()
+@click.option('--verbose', '-v',
+    is_flag=True,
+    help='Enable verbose output.')
 @click.option('--output', '-o',
     type=click.Path(exists=False),
     help='Set the output directory for the translated files. It activate the translation; if no output set, only validation is done.')
-@click.argument('files', nargs=-1, type=click.Path(exists=True))
-def main(files, output):
-    # process all recipes files
-    for p in [Path(f) for f in files]:
-        if p.is_dir():
-            process_dir(p, output)
-        elif p.is_file():
-            process_file(p, output)
+@click.argument('inputs', nargs=-1, type=click.Path(exists=True))
+def main(inputs, output, verbose):
+    try:
+        # process all recipes files
+        for p in [Path(i) for i in inputs]:
+            if p.is_dir():
+                process_dir(p, output)
+            #elif p.is_file():
+            #    process_file(p, output)
+    
+    except SourceException as e:
+        print(f'[!]: {e!s}')
+        if verbose:
+            traceback.print_exc()
+        return 1
+    except Exception as e:
+        print(f"Error: {e!s}")
+        if verbose:
+            traceback.print_exc()
+        return 1
+
+    # quick exit if there is no inputs
+    if not inputs:
+        return 0
 
     # generate all groups
-    
-    p = Path(output, 'groups')
-    p.mkdir(parents=True, exist_ok=True)
-    for group in config.groups.values():
-        if not len(group['recipes']):
-            continue
-        p = Path(output, 'groups', group['title'] + '.rst')
-        with p.open(mode='w') as f:
-            group_to_rst(group, f)
+    if output:
+        p = Path(output, 'groups')
+        p.mkdir(parents=True, exist_ok=True)
+        for group in config.groups.values():
+            if not len(group['recipes']):
+                continue
+            p = Path(output, 'groups', group['title'] + '.rst')
+            with p.open(mode='w') as f:
+                group_to_rst(group, f)
+    return 0
 
         
-
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
 
 
