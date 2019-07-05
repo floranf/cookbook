@@ -11,7 +11,6 @@ import uuid
 import jinja2
 import shutil
 from pathlib import Path
-
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import config
 
@@ -126,11 +125,11 @@ class Recipe:
         self.title = ''
         self.ingredients = []
         self.steps = []
-        self.publish = True
         self.img = ""
+        self.tags = []
 
-        if 'publish' in data:
-            self.publish = data['publish']
+        if 'id' in data:
+            self.id = data['id']
 
         if 'title' in data and data['title']:
             self.title = data['title']
@@ -148,12 +147,13 @@ class Recipe:
         if 'sources' in data:
             self.sources = data['sources']
 
+        if 'tags' in data:
+            self.tags = data['tags']
+
         if 'groups' in data and data['groups']:
             for group in data['groups']:
                 if group in config.groups.keys():
                     config.groups[group]['recipes'].append(self)
-                else:
-                    raise RecipeException(f'the group "${group}" does not exist')
         
         config.recipes.append(self)
 
@@ -172,8 +172,6 @@ def process_file(file, output):
         name = file.stem
         with file.open() as f:
             recipe = Recipe(yaml.safe_load(f))
-            if not recipe.publish:
-                return
             source_imagefile = file.with_suffix('.png')
             if source_imagefile.exists():
                 recipe.img = source_imagefile.name
@@ -243,8 +241,8 @@ def main(inputs, output, verbose):
         for p in [Path(i) for i in inputs]:
             if p.is_dir():
                 process_dir(p, output)
-            #elif p.is_file():
-            #    process_file(p, output)
+            elif p.is_file():
+                process_file(p, output)
     
     except SourceException as e:
         print(f'[!]: {e!s}')

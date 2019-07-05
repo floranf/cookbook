@@ -52,8 +52,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Cookbook'
-copyright = '2018, Floran'
-author = 'Floran'
+copyright = ''
+author = ''
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -242,7 +242,7 @@ html_show_sourcelink = False
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Cookbookdoc'
 
-html_add_permalinks = False
+html_add_permalinks = ""
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {

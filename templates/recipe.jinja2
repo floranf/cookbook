@@ -4,15 +4,14 @@
 
 .. _{{recipe.id}}:
 
-
 :index:`{{recipe.title}}`
 ========={{'=' * (recipe.title|length)}}
 
-{% if recipe.img %}
+{%- if recipe.img %}
 .. image:: {{recipe.img}}
    :height: 200px
    :align: center
-{% endif %}
+{%- endif %}
 
 Ingredients:
 ------------
@@ -21,16 +20,27 @@ Ingredients:
     * [{{ i.quantity }}] **{{ i.name }}** {{ (' -- ' + i.details) if i.details else '' }}
 {%- endfor %}
 
+{%- if recipe.steps %}
+
 Steps:
 ------
 
 {%- for s in recipe.steps %}
     #. {{ '**(' + s.quantities + ')**' if s.quantities else '' }} {{ s.action }} {{ s.details if s.details else '' }}
 {%- endfor %}
-{#
+{%- endif %}
+
+{%- if recipe.companions %}
+
+Companions:
+-----------
+
+{%- for s in recipe.companions %}
+    #. {{ s }}
+{%- endfor %}
+{%- endif %}
+
 {%- if recipe.sources %}
-
-
 
 Sources:
 --------
@@ -39,4 +49,3 @@ Sources:
     #. {{ s }}
 {%- endfor %}
 {%- endif %}
-#}

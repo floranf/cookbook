@@ -13,8 +13,8 @@ groups = {
         'title' : 'Salads',
         'recipes' : []
     },
-    'desert' : {
-        'title' : 'Deserts',
+    'dessert' : {
+        'title' : 'Desserts',
         'recipes' : []
     },
     'main' : { 

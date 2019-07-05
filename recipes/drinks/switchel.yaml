@@ -6,19 +6,20 @@ groups: [drink]
 # Honey, sugar, brown sugar, or maple syrup were sometimes used to sweeten the drink instead of molasses.
 
 ingredients:
-  - A. (1/2 cup) basil, fresh
+  - A. (1/2 cup) basil; fresh
   - B. (4 cups) water
-  - C. (1) lemon, zest of
-  - D. (1 tbsp) lemon juice, fresh
+  - C. (1) lemon; zest of
+  - D. (1 tbsp) lemon juice; fresh
   - E. (1 tbsp) apple cider vinegar
   - F. (2 tbsp) maple sirup
   - G. (1/4 tsp) sea salt
 
 steps:
-  - 1. Bring to boil 1 cup of water and remove from heat.
+  - 1. Bring to a boil 1 cup of water and remove from heat.
   - 2. (10 min) Steep the basil and lemon zest.
   - 3. Strain out basil and lemon zest.
   - 4. Add remaning ingredient.
   - 5. Chill.
 
-# Source: Matt Frazier 
+sources:
+  - Matt Frazier, No Meat Athlete 
