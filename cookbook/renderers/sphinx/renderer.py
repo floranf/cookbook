@@ -4,7 +4,7 @@ from cookbook.renderers.renderer import BaseRenderer
 class Renderer(BaseRenderer):
     def init(ressources, out):
         self.templates = Path(ressources, './templates')
-        self.jinja_env = Environment(loader=FileSystemLoader(self.templates)
+        self.jinja_env = Environment(loader=FileSystemLoader(self.templates))
         self.recipe_template = jinja_env.get_template('recipe.jinja2')
         self.group_template = jinja_env.get_template('group.jinja2')
 

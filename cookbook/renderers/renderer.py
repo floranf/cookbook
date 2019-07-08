@@ -1,4 +1,4 @@
-class Renderer:
+class BaseRenderer:
 
     def init(ressourcesPath, outPath):
         """

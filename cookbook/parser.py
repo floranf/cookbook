@@ -1,16 +1,13 @@
 #!/usr/local/bin/python3.7
 # -*- coding: utf-8 -*-
 
-import traceback
 import yaml
-import click
-import sys
 import re
 import os
 import uuid
 import importlib
-import shutil
 from pathlib import Path
+from loguru import logger
 
 
 class CookbookException(Exception):
@@ -165,12 +162,12 @@ def _process_file(file, recipes):
     recipes : list
         The list of recipes to add to.
     """
-    print(f'info: processng file: {file}')
+    logger.info(f'processing file: {file}')
     try:
         with file.open() as f:
             data = yaml.safe_load(f)
             if not data:
-                print(f'warning: empty file found: {file}')
+                logger.warning(f'empty file found: {file}')
                 return
             recipe = Recipe(data)
             # Look for the image to go with this recipe.
@@ -206,7 +203,7 @@ def _process_dir(input, recipes):
                 _process_file(Path(dirpath, file), recipes)
 
 
-def _load_book(inputs):
+def load_book(inputs):
     #breakpoint()
     for p in [Path(i) for i in inputs]:
         if p.is_dir():
@@ -219,7 +216,7 @@ def _load_book(inputs):
     return None
 
 
-def _load_recipes(inputs):
+def load_recipes(inputs):
     recipes = list()
     for p in [Path(i) for i in inputs]:
         if p.is_dir():
@@ -231,46 +228,10 @@ def _load_recipes(inputs):
     return recipes
 
 
-def _render(book, recipes):
-    print('renderig...')
+def render(book, recipes):
+    logger.info(f'loading renderer: {book.renderer}')
     module = importlib.import_module(f'cookbook.renderers.{book.renderer}.renderer')
-    dir(module)
+    logger.info(dir(module.Renderer))
 
 
-@click.command()
-@click.option('--renderer', '-r',
-              help='Select the renderer to be used.')
-@click.option('--verbose', '-v',
-              is_flag=True,
-              help='Enable verbose output.')
-@click.option('--output', '-o',
-              type=click.Path(exists=False),
-              help='Set the output directory for the translated files. \
-              It activate the translation; if no output set, only validation is done.')
-@click.argument('inputs', nargs=-1, type=click.Path(exists=True))
-def main(inputs, output, verbose, renderer):
-    # quick exit if there is no inputs
-    if not inputs:
-        return 0
-    try:
-        book = _load_book(inputs)
-        recipes = _load_recipes(inputs)
-        if renderer:
-            book.renderer = renderer
-        if output:
-            _render(book, recipes)
-    except SourceException as e:
-        print(f'[!]: {e!s}')
-        if verbose:
-            traceback.print_exc()
-        return 1
-    except Exception as e:
-        print(f"Error: {e!s}")
-        if verbose:
-            traceback.print_exc()
-        return 1
-    return 0
 
-
-if __name__ == '__main__':
-    sys.exit(main())
