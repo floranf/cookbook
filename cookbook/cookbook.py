@@ -8,11 +8,9 @@ import sys
 import re
 import os
 import uuid
-import jinja2
+import importlib
 import shutil
 from pathlib import Path
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-import config
 
 
 class CookbookException(Exception):
@@ -27,7 +25,7 @@ class SourceException(CookbookException):
     def __init__(self, filename, message=""):
         CookbookException.__init__(self, message)
         self.filename = filename
-        
+
     def __str__(self):
         return f"{self.filename}: {CookbookException.__str__(self)}"
 
@@ -46,9 +44,9 @@ class StepException(RecipeException):
 
 class Ingredient:
     ''' Format: id. (quantity) name; details'''
-    
+
     def __init__(self, data):
-        r = re.compile('''^(?P<id>[A-Z]+\.) *(\((?P<quantity>[^)]+)\))? *(?P<name>[^;]+)? *(; *(?P<details>.*))?''')
+        r = re.compile(r'''^(?P<id>[A-Z]+\.) *(\((?P<quantity>[^)]+)\))? *(?P<name>[^;]+)? *(; *(?P<details>.*))?''')
         m = r.match(data)
         if not m:
             raise IngredientException(f'invalid ingredient definition: {data!s}')
@@ -66,9 +64,8 @@ class Ingredient:
         if not self.name:
             raise IngredientException(f'missing ingredient name: {data!s}')
 
-        # details are optional 
+        # details are optional
         self.details = m.group('details')
-        
 
     def __str__(self):
         details = ""
@@ -79,9 +76,9 @@ class Ingredient:
 
 class Step:
     ''' Format: id. (quantity list)+ action'''
-    
+
     def __init__(self, data):
-        r = re.compile('''^(?P<id>[0-9]+\.)? *(\((?P<quantities>[^)]+)\))? *(?P<action>[^;]+)? *(; *(?P<details>.*))?''')
+        r = re.compile(r'''^(?P<id>[0-9]+\.)? *(\((?P<quantities>[^)]+)\))? *(?P<action>[^;]+)? *(; *(?P<details>.*))?''')
         m = r.match(data)
         if not m:
             raise StepException(f'***invalid step definition: {data!s}')
@@ -95,7 +92,7 @@ class Step:
         self.quantities = []
         quantities = m.group('quantities')
         if quantities:
-            self.quantities = quantities #.split(',')
+            self.quantities = quantities  # .split(',')
 
         self.action = m.group('action')
         if not self.action:
@@ -118,7 +115,7 @@ class Recipe:
     '''
     A recipe must have: title, ingredients, steps
     should have: dates, images, intro
-    ''' 
+    '''
     def __init__(self, data):
         self.id = uuid.uuid4().hex
         self.sources = []
@@ -150,100 +147,118 @@ class Recipe:
         if 'tags' in data:
             self.tags = data['tags']
 
-        if 'groups' in data and data['groups']:
-            for group in data['groups']:
-                if group in config.groups.keys():
-                    config.groups[group]['recipes'].append(self)
-        
-        config.recipes.append(self)
 
+class Book:
+    def __init__(self, data):
+        self.title = data['title']
+        self.descriptions = data['descriptions'] 
+        self.authors = data['authors']
+        self.revision = data['revision']
+        self.renderer = data['renderer']
 
-def process_file(file, output):
+def _process_file(file, recipes):
     """
-    Process a recipe file.
+    Process a recipe file and add it to the recipes list.
 
     file : pathlib.Path
         The path to the recipe file to process.
-    output : pathlib.Path
-        The path to the directory for the rendered file.
-        If we dont have an output, we will only validate each input file.
+    recipes : list
+        The list of recipes to add to.
     """
+    print(f'info: processng file: {file}')
     try:
-        name = file.stem
         with file.open() as f:
-            recipe = Recipe(yaml.safe_load(f))
-            source_imagefile = file.with_suffix('.png')
-            if source_imagefile.exists():
-                recipe.img = source_imagefile.name
-            if output:
-                output_file = Path(output, name).with_suffix('.rst')
-                if not os.path.exists(output):
-                    os.makedirs(output)
-                with output_file.open('w') as out_file:
-                    recipe_to_rst(recipe, out_file)
-                if recipe.img:
-                    output_imagefile = output_file.with_suffix('.png')
-                    shutil.copyfile(source_imagefile, output_imagefile)
+            data = yaml.safe_load(f)
+            if not data:
+                print(f'warning: empty file found: {file}')
+                return
+            recipe = Recipe(data)
+            # Look for the image to go with this recipe.
+            # The image file name must be the as the recipe.  
+            for format in ['.png', '.jpeg']:
+                source_imagefile = file.with_suffix(format)
+                if source_imagefile.exists():
+                    recipe.img = source_imagefile.name
+                    break
+            recipes.append(recipe)
     except CookbookException as ex:
         raise SourceException(str(file)) from ex
     except Exception as ex:
         raise SourceException(str(file), "unexpected exception while processing file") from ex
 
 
-def process_dir(input, output):
+def _process_dir(input, recipes):
     """
     Process an recipe directory.
-    
+
     Parameters
     ----------
     input : pathlib.Path
         The path to de directory of recipes to process.
-    output : pathlib.Path
-        The path to the directory for the rendered files.
+    recipes : list
+        The list of recipes to add to.
     """
     for dirpath, dirnames, filenames in os.walk(input):
-        # build path to reflect the input directory structure
-        if output:
-            out = Path(output, input.name, Path(dirpath).relative_to(input))
         for file in filenames:
+            if Path(file).name == "book.yaml":
+                continue
             if file.endswith('.yaml'):
-                pass
-                process_file(Path(dirpath, file), out)
+                _process_file(Path(dirpath, file), recipes)
 
 
-jinja_env = Environment(
-    loader = FileSystemLoader('./templates')
-)
+def _load_book(inputs):
+    #breakpoint()
+    for p in [Path(i) for i in inputs]:
+        if p.is_dir():
+            f = Path(p,'book.yaml')
+            if f.exists():
+                return Book(yaml.safe_load(f.open()))
+        elif p.is_file():
+            if p.name == "book.yaml":
+                return Book(yaml.safe_load(p.open()))
+    return None
 
-recipe_template = jinja_env.get_template('recipe.jinja2')
-group_template = jinja_env.get_template('group.jinja2')
+
+def _load_recipes(inputs):
+    recipes = list()
+    for p in [Path(i) for i in inputs]:
+        if p.is_dir():
+            _process_dir(p, recipes)
+        elif p.is_file():
+            if p.name == "book.yaml":
+                continue
+            _process_file(p, recipes)
+    return recipes
 
 
-def recipe_to_rst(recipe, out_file):
-    out_file.write(recipe_template.render(recipe=recipe))
-
-
-def group_to_rst(group, out_file):
-    out_file.write(group_template.render(group=group))
+def _render(book, recipes):
+    print('renderig...')
+    module = importlib.import_module(f'cookbook.renderers.{book.renderer}.renderer')
+    dir(module)
 
 
 @click.command()
+@click.option('--renderer', '-r',
+              help='Select the renderer to be used.')
 @click.option('--verbose', '-v',
-    is_flag=True,
-    help='Enable verbose output.')
+              is_flag=True,
+              help='Enable verbose output.')
 @click.option('--output', '-o',
-    type=click.Path(exists=False),
-    help='Set the output directory for the translated files. It activate the translation; if no output set, only validation is done.')
+              type=click.Path(exists=False),
+              help='Set the output directory for the translated files. \
+              It activate the translation; if no output set, only validation is done.')
 @click.argument('inputs', nargs=-1, type=click.Path(exists=True))
-def main(inputs, output, verbose):
+def main(inputs, output, verbose, renderer):
+    # quick exit if there is no inputs
+    if not inputs:
+        return 0
     try:
-        # process all recipes files
-        for p in [Path(i) for i in inputs]:
-            if p.is_dir():
-                process_dir(p, output)
-            elif p.is_file():
-                process_file(p, output)
-    
+        book = _load_book(inputs)
+        recipes = _load_recipes(inputs)
+        if renderer:
+            book.renderer = renderer
+        if output:
+            _render(book, recipes)
     except SourceException as e:
         print(f'[!]: {e!s}')
         if verbose:
@@ -254,25 +269,8 @@ def main(inputs, output, verbose):
         if verbose:
             traceback.print_exc()
         return 1
-
-    # quick exit if there is no inputs
-    if not inputs:
-        return 0
-
-    # generate all groups
-    if output:
-        p = Path(output, 'groups')
-        p.mkdir(parents=True, exist_ok=True)
-        for group in config.groups.values():
-            if not len(group['recipes']):
-                continue
-            p = Path(output, 'groups', group['title'] + '.rst')
-            with p.open(mode='w') as f:
-                group_to_rst(group, f)
     return 0
 
-        
+
 if __name__ == '__main__':
     sys.exit(main())
-
-
