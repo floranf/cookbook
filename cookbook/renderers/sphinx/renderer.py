@@ -1,7 +1,12 @@
+import cookbook.renderers.sphinx.config 
 from jinja2 import Environment, FileSystemLoader
 from cookbook.renderers.renderer import BaseRenderer
 
 class Renderer(BaseRenderer):
+
+    def __init__(self, *args, **kwargs):
+        return super().__init__(*args, **kwargs)
+
     def init(ressources, out):
         self.templates = Path(ressources, './templates')
         self.jinja_env = Environment(loader=FileSystemLoader(self.templates))
@@ -14,7 +19,8 @@ class Renderer(BaseRenderer):
     def _group_to_rst(group, out_file):
         out_file.write(group_template.render(group=group))
 
-
+    def render(book, recipes, output):
+        pass
 
     # def render():
     # # generate all groups

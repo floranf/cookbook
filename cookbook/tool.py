@@ -25,7 +25,7 @@ def main(inputs, output, verbose, renderer):
         if renderer:
             book.renderer = renderer
         if output:
-            render(book, recipes)
+            render(book, recipes, output)
     except SourceException as e:
         logger.error(f'[!]: {e!s}')
         if verbose:

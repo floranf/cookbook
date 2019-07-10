@@ -8,7 +8,9 @@ import uuid
 import importlib
 from pathlib import Path
 from loguru import logger
-
+import inspect
+from distutils.dir_util import copy_tree
+from distutils.dir_util import remove_tree
 
 class CookbookException(Exception):
     def __init__(self, message=""):
@@ -228,10 +230,18 @@ def load_recipes(inputs):
     return recipes
 
 
-def render(book, recipes):
+def render(book, recipes, output):
     logger.info(f'loading renderer: {book.renderer}')
     module = importlib.import_module(f'cookbook.renderers.{book.renderer}.renderer')
-    logger.info(dir(module.Renderer))
+    #logger.info(dir(module.Renderer))
+    basePath = Path(inspect.getfile(module)).parent
+    ressourcesPath = Path(basePath, "ressources")
+    skeletonPath = Path(basePath, "skeleton")
+    out = Path(output)
+    if out.exists():
+        remove_tree(str(out))
+    copy_tree(str(skeletonPath), str(out))
+
 
 
 
