@@ -11,6 +11,7 @@ from cookbook.parser import render, load_recipes, load_book, SourceException
               is_flag=True,
               help='Enable verbose output.')
 @click.option('--output', '-o',
+              default='out',
               type=click.Path(exists=False),
               help='Set the output directory for the translated files. \
               It activate the translation; if no output set, only validation is done.')
@@ -25,7 +26,7 @@ def main(inputs, output, verbose, renderer):
         if renderer:
             book.renderer = renderer
         if output:
-            render(book, recipes, output)
+            render(inputs, book, recipes, output)
     except SourceException as e:
         logger.error(f'[!]: {e!s}')
         if verbose:

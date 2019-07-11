@@ -6,49 +6,26 @@ authors: Floran Francois
 revision: v1.0
 renderer: sphinx
 
-# groups = {
-#     'soup' : {
-#         'title' : 'Soups',
-#         'recipes' : []
-#     },
-#     'breakfast' : {
-#         'title' : 'Breakfast',
-#         'recipes' : []
-#     },
-#     'salad' : {
-#         'title' : 'Salads',
-#         'recipes' : []
-#     },
-#     'dessert' : {
-#         'title' : 'Desserts',
-#         'recipes' : []
-#     },
-#     'main' : { 
-#         'title' : 'Mains',
-#         'recipes' : []
-#     },
-#     'side' : { 
-#         'title' : 'Sides',
-#         'recipes' : []
-#     },
-#     'sauce' : {
-#         'title' : 'Dips & Sauces',
-#         'recipes' : []
-#     },
-#     'diy' : {
-#         'title' : 'Do It Yourself',
-#         'recipes' : []
-#     },
-#     'bread' : {
-#         'title' : 'Beads',
-#         'recipes' : []
-#     },
-#     'drink' : {
-#         'title' : 'Drinks',
-#         'recipes' : []
-#     },
-# 	'cookies' : {
-# 		'title' : 'Cookies',
-# 		'recipes' : []
-# 	}
-# }
+groups:
+  - tag: soup
+    title: Soups
+  - tag: breakfast
+    title: Breakfast
+  - tag: salad
+    title: Salads
+  - tag: dessert
+    title: Desserts
+  - tag: main
+    title: Mains         
+  - tag: side
+    title: Sides
+  - tag: sauce
+    title: 'Dips & Sauces'
+  - tag: diy
+    title: 'Do It Yourself'
+  - tag: bread
+    title: Beads
+  - tag: drink
+    title: Drinks
+  - tag: cookie
+    title: 'Cookies'

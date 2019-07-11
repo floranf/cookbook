@@ -1,26 +1,30 @@
 import cookbook.renderers.sphinx.config 
 from jinja2 import Environment, FileSystemLoader
 from cookbook.renderers.renderer import BaseRenderer
+from loguru import logger
+from pathlib import Path
 
 class Renderer(BaseRenderer):
 
     def __init__(self, *args, **kwargs):
         return super().__init__(*args, **kwargs)
 
-    def init(ressources, out):
-        self.templates = Path(ressources, './templates')
-        self.jinja_env = Environment(loader=FileSystemLoader(self.templates))
-        self.recipe_template = jinja_env.get_template('recipe.jinja2')
-        self.group_template = jinja_env.get_template('group.jinja2')
-
-    def _recipe_to_rst(recipe, out_file):
+    def _recipe_to_rst(self, recipe, out_file):
         out_file.write(recipe_template.render(recipe=recipe))
 
-    def _group_to_rst(group, out_file):
+    def _group_to_rst(self, group, out_file):
         out_file.write(group_template.render(group=group))
 
-    def render(book, recipes, output):
-        pass
+    def render(self, book, recipes, output, ressources):
+        logger.info(f'Rendering book: {book.title}')
+        self.templates = Path(ressources, 'templates')
+        self.jinja_env = Environment(loader=FileSystemLoader(str(self.templates)))
+        self.recipe_template = self.jinja_env.get_template('recipe.jinja2')
+        self.group_template = self.jinja_env.get_template('group.jinja2')
+
+        for recipe in recipes:
+            logger.info(f'Rendering recipe: {recipe.title}')
+            #self._recipe_to_rst(recipe, Path(output)
 
     # def render():
     # # generate all groups

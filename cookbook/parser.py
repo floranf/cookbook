@@ -230,17 +230,26 @@ def load_recipes(inputs):
     return recipes
 
 
-def render(book, recipes, output):
+def render(inputs, book, recipes, output):
     logger.info(f'loading renderer: {book.renderer}')
     module = importlib.import_module(f'cookbook.renderers.{book.renderer}.renderer')
-    #logger.info(dir(module.Renderer))
     basePath = Path(inspect.getfile(module)).parent
     ressourcesPath = Path(basePath, "ressources")
+    # create the output from renderer skeleton
     skeletonPath = Path(basePath, "skeleton")
     out = Path(output)
     if out.exists():
         remove_tree(str(out))
     copy_tree(str(skeletonPath), str(out))
+    # add book skeleton if present
+    for p in [Path(i) for i in inputs]:
+        if p.is_dir():
+            bookSqueleton = Path(p,'skeleton')
+            if bookSqueleton.exists():
+                copy_tree(str(bookSqueleton), str(out))
+                break
+    r = module.Renderer()
+    r.render(book, recipes, output, ressourcesPath)
 
 
 
