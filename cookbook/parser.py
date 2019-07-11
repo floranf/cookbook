@@ -117,12 +117,13 @@ class Recipe:
     '''
     def __init__(self, data):
         self.id = uuid.uuid4().hex
-        self.sources = []
+        self.sources = [] # Inspiration for the recipe.
         self.title = ''
         self.ingredients = []
         self.steps = []
         self.img = ""
         self.tags = []
+        self.file = None # Path to the original file
 
         if 'id' in data:
             self.id = data['id']
@@ -172,12 +173,13 @@ def _process_file(file, recipes):
                 logger.warning(f'empty file found: {file}')
                 return
             recipe = Recipe(data)
+            recipe.file = file
             # Look for the image to go with this recipe.
             # The image file name must be the as the recipe.  
             for format in ['.png', '.jpeg']:
                 source_imagefile = file.with_suffix(format)
                 if source_imagefile.exists():
-                    recipe.img = source_imagefile.name
+                    recipe.img = source_imagefile
                     break
             recipes.append(recipe)
     except CookbookException as ex:
@@ -244,9 +246,9 @@ def render(inputs, book, recipes, output):
     # add book skeleton if present
     for p in [Path(i) for i in inputs]:
         if p.is_dir():
-            bookSqueleton = Path(p,'skeleton')
-            if bookSqueleton.exists():
-                copy_tree(str(bookSqueleton), str(out))
+            bookSkeleton = Path(p,'skeleton')
+            if bookSkeleton.exists():
+                copy_tree(str(bookSkeleton), str(out))
                 break
     r = module.Renderer()
     r.render(book, recipes, output, ressourcesPath)

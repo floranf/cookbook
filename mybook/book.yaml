@@ -16,7 +16,7 @@ groups:
   - tag: dessert
     title: Desserts
   - tag: main
-    title: Mains         
+    title: Mains
   - tag: side
     title: Sides
   - tag: sauce
