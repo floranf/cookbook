@@ -124,37 +124,45 @@ class Recipe:
         self.img = ""
         self.tags = []
         self.file = None # Path to the original file
-
         if 'id' in data:
             self.id = data['id']
-
         if 'title' in data and data['title']:
             self.title = data['title']
         else:
             raise RecipeException('a recipe must have a title')
-
         self.ingredients = [Ingredient(i) for i in data['ingredients']]
         if not self.ingredients:
             raise RecipeException('a recipe must have one or more ingredients')
-
         self.steps = [Step(s) for s in data['steps']]
         if not self.steps:
             raise RecipeException('a recipe must have one or more steps')
-
         if 'sources' in data:
             self.sources = data['sources']
-
         if 'tags' in data:
             self.tags = data['tags']
 
 
+class RecipeGroup():
+    def __init__(self, data):
+        self.tag = data['tag']
+        self.title = data['title']
+
+
 class Book:
     def __init__(self, data):
+        self.inputs = [] # list of Path
+        if 'output' in data:
+            self.output = Path(data['output'])
+        else:
+            self.output = Path('out')
         self.title = data['title']
         self.descriptions = data['descriptions'] 
         self.authors = data['authors']
         self.revision = data['revision']
         self.renderer = data['renderer']
+        self.recipes = [] # List of Recipe
+        self.groups = [] # List of RecipeGroup
+
 
 def _process_file(file, recipes):
     """
@@ -207,20 +215,7 @@ def _process_dir(input, recipes):
                 _process_file(Path(dirpath, file), recipes)
 
 
-def load_book(inputs):
-    #breakpoint()
-    for p in [Path(i) for i in inputs]:
-        if p.is_dir():
-            f = Path(p,'book.yaml')
-            if f.exists():
-                return Book(yaml.safe_load(f.open()))
-        elif p.is_file():
-            if p.name == "book.yaml":
-                return Book(yaml.safe_load(p.open()))
-    return None
-
-
-def load_recipes(inputs):
+def _load_recipes(inputs):
     recipes = list()
     for p in [Path(i) for i in inputs]:
         if p.is_dir():
@@ -232,26 +227,41 @@ def load_recipes(inputs):
     return recipes
 
 
-def render(inputs, book, recipes, output):
+def load_book(inputs):
+    book = None
+    inputPaths = [Path(i) for i in inputs]
+    for p in inputPaths:
+        if p.is_dir():
+            f = Path(p,'book.yaml')
+            if f.exists():
+                book = Book(yaml.safe_load(f.open()))
+        elif p.is_file():
+            if p.name == "book.yaml":
+                book = Book(yaml.safe_load(p.open()))
+    book.inputs = inputPaths
+    book.recipes = _load_recipes(inputs)
+    return book
+
+
+def render(book):
     logger.info(f'loading renderer: {book.renderer}')
     module = importlib.import_module(f'cookbook.renderers.{book.renderer}.renderer')
     basePath = Path(inspect.getfile(module)).parent
     ressourcesPath = Path(basePath, "ressources")
     # create the output from renderer skeleton
     skeletonPath = Path(basePath, "skeleton")
-    out = Path(output)
-    if out.exists():
-        remove_tree(str(out))
-    copy_tree(str(skeletonPath), str(out))
+    if book.output.exists():
+        remove_tree(str(book.output))
+    copy_tree(str(skeletonPath), str(book.output))
     # add book skeleton if present
-    for p in [Path(i) for i in inputs]:
+    for p in book.inputs:
         if p.is_dir():
             bookSkeleton = Path(p,'skeleton')
             if bookSkeleton.exists():
-                copy_tree(str(bookSkeleton), str(out))
+                copy_tree(str(bookSkeleton), str(book.output))
                 break
     r = module.Renderer()
-    r.render(book, recipes, output, ressourcesPath)
+    r.render(book, ressourcesPath)
 
 
 

@@ -1,0 +1,4 @@
+- support groups
+- support recipe traduction
+- add scribus renderer
+- add image per groups 

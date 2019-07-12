@@ -22,11 +22,11 @@ def main(inputs, output, verbose, renderer):
         return 0
     try:
         book = load_book(inputs)
-        recipes = load_recipes(inputs)
         if renderer:
             book.renderer = renderer
         if output:
-            render(inputs, book, recipes, output)
+            book.output = output
+        render(book)
     except SourceException as e:
         logger.error(f'[!]: {e!s}')
         if verbose:
